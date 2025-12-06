@@ -1,67 +1,55 @@
 "use client";
 
-import { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 
-type TabKey = "style" | "color" | "mood" | "placement" | "aspect";
-
 export function OptionsTabs() {
-  const [hoveredTab, setHoveredTab] = useState<TabKey | null>(null);
-
-  const tabs: { key: TabKey; label: string }[] = [
-    { key: "style", label: "Style" },
-    { key: "color", label: "Color" },
-    { key: "mood", label: "Mood" },
-    { key: "placement", label: "Placement" },
-    { key: "aspect", label: "Aspect Ratio" },
-  ];
-
   return (
     <div className="flex justify-center">
-      <div className="w-[1000px] relative">
-        {/* Buttons */}
-        <div className="flex justify-center gap-8 p-2 mb-6 w-full">
-          {tabs.map((tab) => (
-            <button
-              key={tab.key}
-              onMouseEnter={() => setHoveredTab(tab.key)}
-              onMouseLeave={() => setHoveredTab(null)}
-              className="text-lg px-6 py-3 rounded-full bg-transparent border-2 border-[#39FF14] text-[#39FF14] ring-2 ring-[#39FF14]/30 ring-offset-2 ring-offset-zinc-900 hover:bg-[#39FF14]/10 transition-all duration-200"
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+      <Tabs defaultValue="style" className="w-[1000px]">
+        <TabsList className="flex justify-center gap-8 bg-transparent h-auto p-2 mb-6 w-full">
+          <TabsTrigger value="style" className="text-lg px-6 py-3 rounded-full bg-transparent border-2 border-[#39FF14] text-[#39FF14] ring-2 ring-[#39FF14]/30 ring-offset-2 ring-offset-zinc-900 hover:bg-[#39FF14]/10 data-[state=active]:bg-[#39FF14] data-[state=active]:text-black data-[state=active]:ring-[#39FF14]/50">Style</TabsTrigger>
+          <TabsTrigger value="color" className="text-lg px-6 py-3 rounded-full bg-transparent border-2 border-[#39FF14] text-[#39FF14] ring-2 ring-[#39FF14]/30 ring-offset-2 ring-offset-zinc-900 hover:bg-[#39FF14]/10 data-[state=active]:bg-[#39FF14] data-[state=active]:text-black data-[state=active]:ring-[#39FF14]/50">Color</TabsTrigger>
+          <TabsTrigger value="mood" className="text-lg px-6 py-3 rounded-full bg-transparent border-2 border-[#39FF14] text-[#39FF14] ring-2 ring-[#39FF14]/30 ring-offset-2 ring-offset-zinc-900 hover:bg-[#39FF14]/10 data-[state=active]:bg-[#39FF14] data-[state=active]:text-black data-[state=active]:ring-[#39FF14]/50">Mood</TabsTrigger>
+          <TabsTrigger value="placement" className="text-lg px-6 py-3 rounded-full bg-transparent border-2 border-[#39FF14] text-[#39FF14] ring-2 ring-[#39FF14]/30 ring-offset-2 ring-offset-zinc-900 hover:bg-[#39FF14]/10 data-[state=active]:bg-[#39FF14] data-[state=active]:text-black data-[state=active]:ring-[#39FF14]/50">Placement</TabsTrigger>
+          <TabsTrigger value="aspect" className="text-lg px-6 py-3 rounded-full bg-transparent border-2 border-[#39FF14] text-[#39FF14] ring-2 ring-[#39FF14]/30 ring-offset-2 ring-offset-zinc-900 hover:bg-[#39FF14]/10 data-[state=active]:bg-[#39FF14] data-[state=active]:text-black data-[state=active]:ring-[#39FF14]/50">Aspect Ratio</TabsTrigger>
+        </TabsList>
 
-        {/* Hover Content */}
-        {hoveredTab && (
-          <div 
-            className="absolute top-full left-0 right-0 z-50"
-            onMouseEnter={() => setHoveredTab(hoveredTab)}
-            onMouseLeave={() => setHoveredTab(null)}
-          >
-            <Card className="w-[1000px] bg-zinc-900/95 border-zinc-700 border-[#39FF14]/30 mx-auto backdrop-blur-sm shadow-[0_0_30px_rgba(57,255,20,0.2)]">
-              <CardContent className="p-8">
-                {hoveredTab === "style" && (
-                  <div className="text-[#39FF14]">Style options content</div>
-                )}
-                {hoveredTab === "color" && (
-                  <div className="text-[#39FF14]">Color options content</div>
-                )}
-                {hoveredTab === "mood" && (
-                  <div className="text-[#39FF14]">Mood options content</div>
-                )}
-                {hoveredTab === "placement" && (
-                  <div className="text-[#39FF14]">Placement options content</div>
-                )}
-                {hoveredTab === "aspect" && (
-                  <div className="text-[#39FF14]">Aspect Ratio options content</div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        )}
-      </div>
+        <TabsContent value="style">
+          <Card className="w-[1000px] h-[400px] bg-zinc-900/80 border-zinc-700 mx-auto">
+            <CardContent className="p-8 h-full flex items-center justify-center">
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="color">
+          <Card className="w-[1000px] h-[400px] bg-zinc-900/80 border-zinc-700 mx-auto">
+            <CardContent className="p-8 h-full flex items-center justify-center">
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="mood">
+          <Card className="w-[1000px] h-[400px] bg-zinc-900/80 border-zinc-700 mx-auto">
+            <CardContent className="p-8 h-full flex items-center justify-center">
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="placement">
+          <Card className="w-[1000px] h-[400px] bg-zinc-900/80 border-zinc-700 mx-auto">
+            <CardContent className="p-8 h-full flex items-center justify-center">
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="aspect">
+          <Card className="w-[1000px] h-[400px] bg-zinc-900/80 border-zinc-700 mx-auto">
+            <CardContent className="p-8 h-full flex items-center justify-center">
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

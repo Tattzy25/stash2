@@ -107,19 +107,21 @@ export default function Page() {
         <div className="py-4 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             {/* Header */}
-            <h1 className="pt-[30px] mb-[100px] text-5xl sm:text-6xl md:text-7xl font-bold text-center font-[family-name:var(--font-rock-salt)]">
+            <h1 className="pt-4 sm:pt-[30px] mb-8 sm:mb-12 md:mb-[100px] text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-center font-[family-name:var(--font-rock-salt)]">
               INK FEVER?
             </h1>
             
             {/* Prompt Input */}
-            <PromptInput
-              onSubmit={handlePromptSubmit}
-              isLoading={isLoading}
-              showProviders={showProviders}
-              onToggleProviders={toggleView}
-              mode={mode}
-              onModeChange={handleModeChange}
-            />
+            <div className="max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto">
+              <PromptInput
+                onSubmit={handlePromptSubmit}
+                isLoading={isLoading}
+                showProviders={showProviders}
+                onToggleProviders={toggleView}
+                mode={mode}
+                onModeChange={handleModeChange}
+              />
+            </div>
 
             {/* Options Tabs */}
             <OptionsTabs />
