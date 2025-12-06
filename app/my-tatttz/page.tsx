@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
-import { Heart, Clock, Download, Share2, Upload, ZoomIn, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
+import { Heart, Clock, Download, Share2, Upload, ZoomIn, ChevronLeft, ChevronRight, Sparkles, Skull } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -35,6 +35,29 @@ import {
   StoredImage 
 } from "@/lib/image-storage";
 import Link from "next/link";
+import ImageAccordion, { AccordionItem } from "@/components/imageAccordion";
+
+// Validate if a URL is usable for images
+function isValidImageUrl(url: string): boolean {
+  if (!url || typeof url !== 'string') return false;
+  // Allow data URLs, http/https URLs, and local paths starting with /
+  return url.startsWith('data:image/') || 
+         url.startsWith('http://') || 
+         url.startsWith('https://') || 
+         url.startsWith('/');
+}
+
+// Helper to convert StoredImage to AccordionItem (with validation)
+function toAccordionItems(images: StoredImage[]): AccordionItem[] {
+  return images
+    .filter(img => isValidImageUrl(img.url))
+    .map(img => ({
+      id: img.id,
+      url: img.url,
+      title: img.prompt.slice(0, 40) + (img.prompt.length > 40 ? "..." : ""),
+      description: img.prompt,
+    }));
+}
 
 // Placeholder images for empty state
 const placeholderImages = ["/tattied.svg", "/ink-fever.svg"];
@@ -293,12 +316,12 @@ export default function MyTaTTTzPage() {
   if (!isLoaded) {
     return (
       <div className="flex flex-col flex-1 p-6 space-y-8">
-        <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent">
+        <div className="text-center space-y-4">
+          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl font-[family-name:var(--font-rock-salt)]">
             My TaTTTz
           </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Loading your collection...
+          <p className="text-lg text-muted-foreground font-[family-name:var(--font-orbitron)]">
+            Loading...
           </p>
         </div>
       </div>
@@ -308,67 +331,50 @@ export default function MyTaTTTzPage() {
   return (
     <div className="flex flex-col flex-1 p-6 space-y-8">
       {/* Header */}
-      <div className="text-center space-y-2">
-        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent">
+      <div className="text-center space-y-4">
+        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl font-[family-name:var(--font-rock-salt)]">
           My TaTTTz
         </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Your personal collection of AI-generated tattoo designs. Browse your
-          history and favorites all in one place.
+        <p className="text-lg text-muted-foreground font-[family-name:var(--font-orbitron)]">
+          your life, your pain, your power, our ink
         </p>
       </div>
 
       <Separator />
 
-      {/* Generated Image History Section */}
+      {/* Raw Creations Section */}
       <section className="space-y-4">
         <Card className="border-border/50">
-          <CardHeader className="pb-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="flex items-center gap-2 text-xl">
-                  <Clock className="h-5 w-5 text-primary" />
-                  Generation History
-                </CardTitle>
-                <CardDescription>
-                  All your recently generated tattoo designs
-                </CardDescription>
-              </div>
-              <Badge variant="secondary" className="text-sm">{images.length} images</Badge>
-            </div>
+          <CardHeader className="pb-4 pl-8">
+            <CardDescription className="flex items-center gap-2 text-base">
+              <Skull className="h-5 w-5" />
+              RAW. REAL. YOU.
+            </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex justify-center">
             {images.length > 0 ? (
-              <ImageCarousel images={images} onToggleLike={handleToggleLike} />
+              <ImageAccordion items={toAccordionItems(images)} />
             ) : (
-              <EmptyState type="generated" />
+              <ImageAccordion />
             )}
           </CardContent>
         </Card>
       </section>
 
-      {/* Liked Images Section */}
+      {/* Liked Section */}
       <section className="space-y-4">
         <Card className="border-border/50">
-          <CardHeader className="pb-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="flex items-center gap-2 text-xl">
-                  <Heart className="h-5 w-5 text-red-500 fill-red-500" />
-                  Liked Designs
-                </CardTitle>
-                <CardDescription>
-                  Your favorite tattoo designs that you've saved
-                </CardDescription>
-              </div>
-              <Badge variant="secondary" className="text-sm">{likedImages.length} liked</Badge>
-            </div>
+          <CardHeader className="pb-4 pl-8">
+            <CardDescription className="flex items-center gap-2 text-base">
+              <Skull className="h-5 w-5" />
+              RAW. REAL. YOU.
+            </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex justify-center">
             {likedImages.length > 0 ? (
-              <ImageCarousel images={likedImages} onToggleLike={handleToggleLike} />
+              <ImageAccordion items={toAccordionItems(likedImages)} />
             ) : (
-              <EmptyState type="liked" />
+              <ImageAccordion />
             )}
           </CardContent>
         </Card>

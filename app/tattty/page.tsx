@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ModelSelect } from "@/components/ModelSelect";
 import { PromptInput } from "@/components/PromptInput";
 import { ModelCardCarousel } from "@/components/ModelCardCarousel";
+import { ImageDisplay } from "@/components/ImageDisplay";
 import {
   MODEL_CONFIGS,
   PROVIDERS,
@@ -71,7 +72,9 @@ export default function Page() {
   };
 
   const getModelProps = () =>
-    (Object.keys(PROVIDERS) as ProviderKey[]).map((key) => {
+    (Object.keys(PROVIDERS) as ProviderKey[])
+      .filter((key) => key !== "fireworks")
+      .map((key) => {
       const provider = PROVIDERS[key];
       const imageItem = images.find((img) => img.provider === key);
       const imageData = imageItem?.image;
@@ -102,6 +105,11 @@ export default function Page() {
       <div className="h-full overflow-y-auto">
         <div className="py-4 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
+            {/* Header */}
+            <h1 className="pt-[30px] mb-[100px] text-5xl sm:text-6xl md:text-7xl font-bold text-center font-[family-name:var(--font-rock-salt)]">
+              INK FEVER?
+            </h1>
+            
             {/* Prompt Input */}
             <PromptInput
               onSubmit={handlePromptSubmit}
@@ -110,18 +118,27 @@ export default function Page() {
               onToggleProviders={toggleView}
               mode={mode}
               onModeChange={handleModeChange}
-              suggestions={suggestions}
             />
             
-            {/* Mobile: Carousel */}
-            <div className="md:hidden">
+            {/* Mobile: Carousel - Hidden */}
+            <div className="hidden">
               <ModelCardCarousel models={getModelProps()} />
             </div>
             
-            {/* Desktop: Grid of 4 provider cards */}
-            <div className="hidden md:grid md:grid-cols-2 2xl:grid-cols-4 gap-8">
-              {getModelProps().map((props) => (
-                <ModelSelect key={props.label} {...props} />
+            {/* Single centered image result */}
+            <div className="flex justify-center pt-[100px]">
+              {getModelProps().slice(0, 1).map((props) => (
+                <div key={props.label} className="w-[1000px] max-w-[1000px]">
+                  <div className="relative w-full h-[500px] bg-zinc-50 rounded-lg">
+                    <ImageDisplay
+                      modelId={props.modelId}
+                      provider={props.providerKey}
+                      image={props.image}
+                      timing={props.timing}
+                      failed={props.failed}
+                    />
+                  </div>
+                </div>
               ))}
             </div>
             

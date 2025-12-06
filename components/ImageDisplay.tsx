@@ -79,7 +79,7 @@ export function ImageDisplay({
     <>
       <div
         className={cn(
-          "relative w-full aspect-square group bg-zinc-50 rounded-lg",
+          "relative w-full h-full group bg-zinc-50 rounded-lg",
           image && !failed && "cursor-pointer",
           (!image || failed) && "border-1 border-zinc-100",
         )}

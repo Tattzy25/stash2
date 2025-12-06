@@ -148,13 +148,13 @@ export function useImageGeneration(): UseImageGenerationReturn {
       
       // Save successful images to localStorage after all generations complete
       setImages((currentImages) => {
-        const successfulImages = currentImages.filter(img => img.image !== null);
+        const successfulImages = currentImages.filter(img => img.image !== null && img.modelId);
         if (successfulImages.length > 0) {
           const imagesToSave = successfulImages.map(img => ({
             url: img.image!,
             prompt,
             provider: img.provider,
-            modelId: img.modelId,
+            modelId: img.modelId!,
           }));
           saveGeneratedImages(imagesToSave);
         }

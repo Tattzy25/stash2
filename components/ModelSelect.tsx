@@ -70,7 +70,8 @@ export function ModelSelect({
       className={cn(`w-full transition-opacity`, enabled ? "" : "opacity-50")}
     >
       <CardContent className="pt-6 h-full">
-        <div className="flex items-center justify-between gap-2 mb-4">
+        {/* Header hidden from UI but code intact */}
+        <div className="hidden">
           <div className="flex items-center gap-2 w-full transition-opacity duration-200">
             <div className="bg-primary p-2 rounded-full">
               <Link
