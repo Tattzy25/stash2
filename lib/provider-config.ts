@@ -1,4 +1,4 @@
-export type ProviderKey = "replicate" | "fireworks";
+export type ProviderKey = "replicate";
 export type ModelMode = "performance" | "quality";
 
 export const PROVIDERS: Record<
@@ -29,36 +29,19 @@ export const PROVIDERS: Record<
       "stability-ai/stable-diffusion-3.5-large-turbo",
     ],
   },
-  fireworks: {
-    displayName: "Fireworks",
-    iconPath: "/provider-icons/fireworks.svg",
-    color: "from-orange-500 to-red-500",
-    models: [
-      "accounts/fireworks/models/flux-1-dev-fp8",
-      "accounts/fireworks/models/flux-1-schnell-fp8",
-      "accounts/fireworks/models/playground-v2-5-1024px-aesthetic",
-      "accounts/fireworks/models/japanese-stable-diffusion-xl",
-      "accounts/fireworks/models/playground-v2-1024px-aesthetic",
-      "accounts/fireworks/models/SSD-1B",
-      "accounts/fireworks/models/stable-diffusion-xl-1024-v1-0",
-    ],
-  },
 };
 
 export const MODEL_CONFIGS: Record<ModelMode, Record<ProviderKey, string>> = {
   performance: {
     replicate: "stability-ai/stable-diffusion-3.5-large-turbo",
-    fireworks: "accounts/fireworks/models/flux-1-schnell-fp8",
   },
   quality: {
     replicate: "stability-ai/stable-diffusion-3.5-large",
-    fireworks: "accounts/fireworks/models/flux-1-dev-fp8",
   },
 };
 
 export const PROVIDER_ORDER: ProviderKey[] = [
   "replicate",
-  "fireworks",
 ];
 
 export const initializeProviderRecord = <T>(defaultValue?: T) =>

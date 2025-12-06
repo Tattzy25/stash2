@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ImageModel, experimental_generateImage as generateImage } from "ai";
-import { fireworks } from "@ai-sdk/fireworks";
 import { replicate } from "@ai-sdk/replicate";
 import { ProviderKey } from "@/lib/provider-config";
 import { GenerateImageRequest } from "@/lib/api-types";
@@ -12,7 +11,6 @@ import { GenerateImageRequest } from "@/lib/api-types";
 const TIMEOUT_MILLIS = 55 * 1000;
 
 const DEFAULT_IMAGE_SIZE = "1024x1024";
-const DEFAULT_ASPECT_RATIO = "1:1";
 
 interface ProviderConfig {
   createImageModel: (modelId: string) => ImageModel;
@@ -20,10 +18,6 @@ interface ProviderConfig {
 }
 
 const providerConfig: Record<ProviderKey, ProviderConfig> = {
-  fireworks: {
-    createImageModel: fireworks.image,
-    dimensionFormat: "aspectRatio",
-  },
   replicate: {
     createImageModel: replicate.image,
     dimensionFormat: "size",
@@ -56,12 +50,11 @@ export async function POST(req: NextRequest) {
 
     const config = providerConfig[provider];
     const startstamp = performance.now();
+    
     const generatePromise = generateImage({
       model: config.createImageModel(modelId),
       prompt,
-      ...(config.dimensionFormat === "size"
-        ? { size: DEFAULT_IMAGE_SIZE }
-        : { aspectRatio: DEFAULT_ASPECT_RATIO }),
+      size: DEFAULT_IMAGE_SIZE,
       seed: Math.floor(Math.random() * 1000000),
     }).then(({ image, warnings }) => {
       if (warnings?.length > 0) {

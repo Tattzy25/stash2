@@ -5,6 +5,7 @@ import { ModelSelect } from "@/components/ModelSelect";
 import { PromptInput } from "@/components/PromptInput";
 import { ModelCardCarousel } from "@/components/ModelCardCarousel";
 import { ImageDisplay } from "@/components/ImageDisplay";
+import { OptionsTabs } from "@/components/OptionsTabs";
 import {
   MODEL_CONFIGS,
   PROVIDERS,
@@ -119,6 +120,9 @@ export default function Page() {
               mode={mode}
               onModeChange={handleModeChange}
             />
+
+            {/* Options Tabs */}
+            <OptionsTabs />
             
             {/* Mobile: Carousel - Hidden */}
             <div className="hidden">
