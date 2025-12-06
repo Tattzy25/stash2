@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ImageError, ImageResult, ProviderTiming } from "@/lib/image-types";
 import { initializeProviderRecord, ProviderKey } from "@/lib/provider-config";
+import { saveGeneratedImages } from "@/lib/image-storage";
 
 interface UseImageGenerationReturn {
   images: ImageResult[];
@@ -144,6 +145,21 @@ export function useImageGeneration(): UseImageGenerationReturn {
       });
 
       await Promise.all(fetchPromises);
+      
+      // Save successful images to localStorage after all generations complete
+      setImages((currentImages) => {
+        const successfulImages = currentImages.filter(img => img.image !== null);
+        if (successfulImages.length > 0) {
+          const imagesToSave = successfulImages.map(img => ({
+            url: img.image!,
+            prompt,
+            provider: img.provider,
+            modelId: img.modelId,
+          }));
+          saveGeneratedImages(imagesToSave);
+        }
+        return currentImages;
+      });
     } catch (error) {
       console.error("Error fetching images:", error);
     } finally {

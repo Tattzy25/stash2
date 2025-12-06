@@ -10,7 +10,7 @@ const Home = () => (
   <main className="flex min-h-screen items-center justify-center bg-background">
     <Link
       className="rounded-xl bg-red-600 px-8 py-4 font-bold text-2xl text-white shadow-lg transition hover:bg-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
-      href="/dashboard"
+      href="/tattty"
     >
       ENTER
     </Link>

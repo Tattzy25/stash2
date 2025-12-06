@@ -33,34 +33,34 @@ const data = {
   navMain: [
     {
       title: "Tattty AI",
-      url: "/dashboard",
+      url: "/tattty",
       icon: IconDashboard,
     },
     {
       title: "Gallery",
-      url: "/dashboard/gallery",
+      url: "/tattty/gallery",
       icon: IconListDetails,
     },
     {
       title: "My TaTTTz",
-      url: "/dashboard/gallery-data",
+      url: "/my-tatttz",
       icon: IconChartBar,
     },
   ],
   navSecondary: [
     {
       title: "Settings",
-      url: "/dashboard/settings",
+      url: "/tattty/settings",
       icon: IconSettings,
     },
     {
       title: "Get Help",
-      url: "/dashboard/get-help",
+      url: "/tattty/get-help",
       icon: IconHelp,
     },
     {
       title: "Search",
-      url: "/dashboard/search",
+      url: "/tattty/search",
       icon: IconSearch,
     },
   ],
