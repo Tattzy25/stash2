@@ -23,7 +23,6 @@ Original text: "${text}"`;
     const result = await generateText({
       model: openai("gpt-4o-mini"),
       prompt,
-      maxTokens: 500,
     });
 
     const fonts = result.text
