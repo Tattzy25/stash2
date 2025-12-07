@@ -8,6 +8,8 @@ import {
   IconListDetails,
   IconSearch,
   IconSettings,
+  IconTypography,
+  IconPalette,
 } from "@tabler/icons-react";
 import type * as React from "react";
 
@@ -45,6 +47,16 @@ const data = {
       title: "My TaTTTz",
       url: "/my-tatttz",
       icon: IconChartBar,
+    },
+    {
+      title: "Fonts",
+      url: "/tattty/fonts",
+      icon: IconTypography,
+    },
+    {
+      title: "Customize",
+      url: "/tattty/customize",
+      icon: IconPalette,
     },
   ],
   navSecondary: [
