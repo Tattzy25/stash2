@@ -61,7 +61,6 @@ export function ImagePlayground({
 
   const providerToModel = {
     replicate: selectedModels.replicate,
-    fireworks: selectedModels.fireworks,
   };
 
   const handlePromptSubmit = (newPrompt: string) => {

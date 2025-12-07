@@ -60,7 +60,6 @@ export default function Page() {
 
   const providerToModel = {
     replicate: selectedModels.replicate,
-    fireworks: selectedModels.fireworks,
   };
 
   const handlePromptSubmit = (newPrompt: string) => {
@@ -73,7 +72,6 @@ export default function Page() {
 
   const getModelProps = () =>
     (Object.keys(PROVIDERS) as ProviderKey[])
-      .filter((key) => key !== "fireworks")
       .map((key) => {
         const provider = PROVIDERS[key];
         const imageItem = images.find((img) => img.provider === key);
