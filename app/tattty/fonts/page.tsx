@@ -32,6 +32,15 @@ export default function FontsPage() {
       return;
     }
 
+    if (text.length > 100) {
+      toast({
+        title: "Text Too Long",
+        description: "Please enter text with 100 characters or less.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
     try {
       const response = await fetch("/api/generate-fonts", {

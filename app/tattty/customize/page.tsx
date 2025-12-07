@@ -132,7 +132,7 @@ export default function CustomizePage() {
       const data = await response.json();
       const imageData = data.image.startsWith("data:") 
         ? data.image 
-        : `data:image/png;base64,${data.image}`;
+        : `data:image/webp;base64,${data.image}`;
       setGeneratedImage(imageData);
 
       toast({

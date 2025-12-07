@@ -31,6 +31,13 @@ Original text: "${text}"`;
       .filter((line) => line.trim())
       .slice(0, 5);
 
+    if (fonts.length === 0) {
+      return NextResponse.json(
+        { fonts: [text] },
+        { status: 200 }
+      );
+    }
+
     return NextResponse.json({ fonts });
   } catch (error) {
     console.error("Error generating fonts:", error);
