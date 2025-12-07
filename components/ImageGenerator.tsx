@@ -1,19 +1,23 @@
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, ChevronDown, Settings } from "lucide-react";
+import { ImageCarousel } from "@/components/ImageCarousel";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { Button } from "@/components/ui/button";
-import { ImageDisplay } from "./ImageDisplay";
-import { ImageCarousel } from "@/components/ImageCarousel";
-import { GeneratedImage, ImageError, ProviderTiming } from "@/lib/image-types";
+import type {
+  GeneratedImage,
+  ImageError,
+  ProviderTiming,
+} from "@/lib/image-types";
 import {
-  PROVIDER_ORDER,
-  ProviderKey,
   initializeProviderRecord,
+  PROVIDER_ORDER,
+  type ProviderKey,
 } from "@/lib/provider-config";
+import { ImageDisplay } from "./ImageDisplay";
 
 interface ImageGeneratorProps {
   images: GeneratedImage[];
@@ -39,8 +43,8 @@ export function ImageGenerator({
         <Collapsible>
           <CollapsibleTrigger asChild>
             <Button
-              variant="ghost"
               className="flex items-center gap-2 text-destructive"
+              variant="ghost"
             >
               <AlertCircle className="h-4 w-4" />
               {errors.length} {errors.length === 1 ? "error" : "errors"}{" "}
@@ -49,7 +53,7 @@ export function ImageGenerator({
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent>
-            <div className="space-y-2 mt-2">
+            <div className="mt-2 space-y-2">
               {errors.map((err, index) => (
                 <Alert key={index} variant="destructive">
                   <AlertCircle className="h-4 w-4" />
@@ -69,12 +73,12 @@ export function ImageGenerator({
       )}
 
       <div className="flex items-center justify-between">
-        <h3 className="text-xl font-semibold">Generated Images</h3>
+        <h3 className="font-semibold text-xl">Generated Images</h3>
         <Button
-          variant="outline"
           className=""
           onClick={() => toggleView()}
           size="icon"
+          variant="outline"
         >
           <Settings className="h-4 w-4" />
         </Button>
@@ -83,30 +87,30 @@ export function ImageGenerator({
       {/* Mobile layout: Carousel */}
       <div className="sm:hidden">
         <ImageCarousel
-          providers={PROVIDER_ORDER}
-          images={images}
-          timings={timings}
-          failedProviders={failedProviders}
           enabledProviders={enabledProviders}
+          failedProviders={failedProviders}
+          images={images}
+          providers={PROVIDER_ORDER}
           providerToModel={initializeProviderRecord<string>()}
+          timings={timings}
         />
       </div>
 
       {/* Desktop layout: Grid */}
-      <div className="hidden sm:grid sm:grid-cols-2 2xl:grid-cols-4 gap-6">
+      <div className="hidden gap-6 sm:grid sm:grid-cols-2 2xl:grid-cols-4">
         {PROVIDER_ORDER.map((provider) => {
           const imageItem = images.find((img) => img.provider === provider);
           const imageData = imageItem?.image;
           const timing = timings[provider];
           return (
             <ImageDisplay
-              key={provider}
-              provider={provider}
-              image={imageData}
-              timing={timing}
-              failed={failedProviders.includes(provider)}
               enabled={enabledProviders[provider]}
+              failed={failedProviders.includes(provider)}
+              image={imageData}
+              key={provider}
               modelId={imageItem?.modelId ?? ""}
+              provider={provider}
+              timing={timing}
             />
           );
         })}

@@ -1,18 +1,18 @@
 "use client";
 
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   Carousel,
-  CarouselApi,
+  type CarouselApi,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { ModelSelect } from "./ModelSelect";
+import type { ProviderTiming } from "@/lib/image-types";
+import type { ProviderKey } from "@/lib/provider-config";
 import { cn } from "@/lib/utils";
-import { useState, useEffect, useLayoutEffect, useRef } from "react";
-import { ProviderKey } from "@/lib/provider-config";
-import { ProviderTiming } from "@/lib/image-types";
+import { ModelSelect } from "./ModelSelect";
 
 interface ModelCardCarouselProps {
   models: Array<{
@@ -64,15 +64,15 @@ export function ModelCardCarousel({ models }: ModelCardCarouselProps) {
   }, [api]);
 
   return (
-    <div className="relative w-full mb-8">
+    <div className="relative mb-8 w-full">
       <Carousel
-        setApi={setApi}
         opts={{
           align: "start",
           dragFree: false,
           containScroll: "trimSnaps",
-          loop: true
+          loop: true,
         }}
+        setApi={setApi}
       >
         <CarouselContent>
           {models.map((model, i) => (
@@ -83,7 +83,7 @@ export function ModelCardCarousel({ models }: ModelCardCarouselProps) {
                   model.onChange(value, providerKey)
                 }
               />
-              <div className="text-center text-sm text-muted-foreground mt-4">
+              <div className="mt-4 text-center text-muted-foreground text-sm">
                 {i + 1} of {models.length}
               </div>
             </CarouselItem>
@@ -95,17 +95,17 @@ export function ModelCardCarousel({ models }: ModelCardCarouselProps) {
       </Carousel>
 
       {/* Dot Indicators */}
-      <div className="absolute -bottom-6 left-0 right-0">
+      <div className="-bottom-6 absolute right-0 left-0">
         <div className="flex justify-center gap-1">
           {models.map((_, index) => (
             <button
-              key={index}
               className={cn(
                 "h-1.5 rounded-full transition-all",
                 index === currentSlide
                   ? "w-4 bg-primary"
-                  : "w-1.5 bg-primary/50",
+                  : "w-1.5 bg-primary/50"
               )}
+              key={index}
               onClick={() => api?.scrollTo(index)}
             >
               <span className="sr-only">Go to model {index + 1}</span>

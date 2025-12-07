@@ -1,8 +1,8 @@
 "use client";
 
+import { Heart, Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { EmptyStateProps } from "../types";
 
@@ -23,12 +23,12 @@ export function EmptyState({ type }: EmptyStateProps) {
 // Sub-components
 function PlaceholderImage() {
   return (
-    <div className="relative w-32 h-32 mb-6">
+    <div className="relative mb-6 h-32 w-32">
       <Image
-        src="/tattied.svg"
         alt="No images yet"
-        fill
         className="object-contain opacity-50"
+        fill
+        src="/tattied.svg"
       />
     </div>
   );
@@ -36,7 +36,7 @@ function PlaceholderImage() {
 
 function IconBadge({ isGenerated }: { isGenerated: boolean }) {
   return (
-    <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+    <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
       {isGenerated ? (
         <Sparkles className="h-8 w-8 text-muted-foreground/50" />
       ) : (
@@ -48,7 +48,7 @@ function IconBadge({ isGenerated }: { isGenerated: boolean }) {
 
 function EmptyTitle({ isGenerated }: { isGenerated: boolean }) {
   return (
-    <h3 className="text-lg font-medium">
+    <h3 className="font-medium text-lg">
       {isGenerated ? "No generated designs yet" : "No liked designs yet"}
     </h3>
   );
@@ -56,7 +56,7 @@ function EmptyTitle({ isGenerated }: { isGenerated: boolean }) {
 
 function EmptyDescription({ isGenerated }: { isGenerated: boolean }) {
   return (
-    <p className="text-sm text-muted-foreground max-w-sm mt-1 mb-4">
+    <p className="mt-1 mb-4 max-w-sm text-muted-foreground text-sm">
       {isGenerated
         ? "Head over to Tattty AI to create your first tattoo design!"
         : "Click the heart icon on any generated image to add it to your favorites collection."}

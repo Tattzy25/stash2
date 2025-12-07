@@ -125,7 +125,7 @@ function shuffle<T>(array: T[]): T[] {
   return shuffled;
 }
 
-export function getRandomSuggestions(count: number = 5): Suggestion[] {
+export function getRandomSuggestions(count = 5): Suggestion[] {
   const shuffledPrompts = shuffle(basePrompts);
   const shuffledStyles = shuffle(artStyles);
 

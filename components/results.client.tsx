@@ -112,13 +112,13 @@ export const ResultsClient = ({ defaultData }: ResultsClientProps) => {
               {hasImages ? (
                 <div className="columns-1 gap-4 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-4 2xl:columns-4">
                   {galleryItems.map((item: LightboxItem, index: number) => (
-                  <Preview
-                    key={`${item.url}-${index}`}
-                    onClick={(): void => openLightbox(index)}
-                    priority={index < PRIORITY_COUNT}
-                    selected={lightboxIndex === index}
-                    url={item.url}
-                  />
+                    <Preview
+                      key={`${item.url}-${index}`}
+                      onClick={(): void => openLightbox(index)}
+                      priority={index < PRIORITY_COUNT}
+                      selected={lightboxIndex === index}
+                      url={item.url}
+                    />
                   ))}
                 </div>
               ) : (

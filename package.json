@@ -9,6 +9,7 @@
     "format": "npx ultracite@latest format"
   },
   "dependencies": {
+    "@ai-sdk/fal": "^1.0.24",
     "@ai-sdk/fireworks": "^1.0.29",
     "@ai-sdk/openai": "^2.0.77",
     "@ai-sdk/replicate": "^1.0.19",

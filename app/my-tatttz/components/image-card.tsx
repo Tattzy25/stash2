@@ -1,10 +1,10 @@
 "use client";
 
+import { Clock, Download, Heart, Share2, Upload, ZoomIn } from "lucide-react";
 import Image from "next/image";
-import { Heart, Clock, Download, Share2, Upload, ZoomIn } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -24,45 +24,62 @@ import { formatDate } from "../utils";
 
 export function ImageCard({ image, onToggleLike }: ImageCardProps) {
   return (
-    <Card className="group overflow-hidden transition-all hover:shadow-lg hover:shadow-primary/10 border-border/50 rounded-[2rem]">
-      <div className="relative aspect-square overflow-hidden bg-muted rounded-[2rem]">
+    <Card className="group overflow-hidden rounded-[2rem] border-border/50 transition-all hover:shadow-lg hover:shadow-primary/10">
+      <div className="relative aspect-square overflow-hidden rounded-[2rem] bg-muted">
         <Image
-          src={image.url}
           alt={image.prompt}
+          className="rounded-[2rem] object-cover"
           fill
-          className="object-cover rounded-[2rem]"
-          unoptimized={image.url.startsWith("data:") || image.url.startsWith("http")}
+          src={image.url}
+          unoptimized={
+            image.url.startsWith("data:") || image.url.startsWith("http")
+          }
         />
-        
+
         {/* Overlay on hover */}
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity" />
-        
+        <div className="absolute inset-0 bg-black/40 opacity-0 transition-opacity group-hover:opacity-100" />
+
         {/* Action buttons */}
-        <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
+        <div className="absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/80 to-transparent p-2">
           <div className="flex justify-center gap-1">
             <ActionButton
-              icon={<Heart className={`h-4 w-4 ${image.liked ? "fill-current" : ""}`} />}
-              tooltip={image.liked ? "Unlike" : "Like"}
+              className={
+                image.liked ? "text-red-500" : "text-white/80 hover:text-white"
+              }
+              icon={
+                <Heart
+                  className={`h-4 w-4 ${image.liked ? "fill-current" : ""}`}
+                />
+              }
               onClick={() => onToggleLike(image.id)}
-              className={image.liked ? "text-red-500" : "text-white/80 hover:text-white"}
+              tooltip={image.liked ? "Unlike" : "Like"}
             />
-            <ActionButton icon={<Share2 className="h-4 w-4" />} tooltip="Share" />
-            <ActionButton icon={<Download className="h-4 w-4" />} tooltip="Download" />
-            <ActionButton icon={<Upload className="h-4 w-4" />} tooltip="Upload" />
+            <ActionButton
+              icon={<Share2 className="h-4 w-4" />}
+              tooltip="Share"
+            />
+            <ActionButton
+              icon={<Download className="h-4 w-4" />}
+              tooltip="Download"
+            />
+            <ActionButton
+              icon={<Upload className="h-4 w-4" />}
+              tooltip="Upload"
+            />
             <ImagePreviewDialog image={image} />
           </div>
         </div>
       </div>
-      
+
       <CardContent className="p-3">
-        <p className="text-sm text-muted-foreground line-clamp-1 mb-2">
+        <p className="mb-2 line-clamp-1 text-muted-foreground text-sm">
           {image.prompt}
         </p>
         <div className="flex items-center justify-between">
-          <Badge variant="outline" className="text-xs">
+          <Badge className="text-xs" variant="outline">
             {image.provider}
           </Badge>
-          <span className="text-xs text-muted-foreground flex items-center gap-1">
+          <span className="flex items-center gap-1 text-muted-foreground text-xs">
             <Clock className="h-3 w-3" />
             {formatDate(image.createdAt)}
           </span>
@@ -80,16 +97,21 @@ interface ActionButtonProps {
   className?: string;
 }
 
-function ActionButton({ icon, tooltip, onClick, className = "text-white/80 hover:text-white" }: ActionButtonProps) {
+function ActionButton({
+  icon,
+  tooltip,
+  onClick,
+  className = "text-white/80 hover:text-white",
+}: ActionButtonProps) {
   return (
     <TooltipProvider delayDuration={0}>
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
-            size="icon"
-            variant="ghost"
             className={`h-8 w-8 ${className}`}
             onClick={onClick}
+            size="icon"
+            variant="ghost"
           >
             {icon}
           </Button>
@@ -107,7 +129,11 @@ function ImagePreviewDialog({ image }: { image: ImageCardProps["image"] }) {
         <TooltipTrigger asChild>
           <Dialog>
             <DialogTrigger asChild>
-              <Button size="icon" variant="ghost" className="h-8 w-8 text-white/80 hover:text-white">
+              <Button
+                className="h-8 w-8 text-white/80 hover:text-white"
+                size="icon"
+                variant="ghost"
+              >
                 <ZoomIn className="h-4 w-4" />
               </Button>
             </DialogTrigger>
@@ -116,12 +142,12 @@ function ImagePreviewDialog({ image }: { image: ImageCardProps["image"] }) {
                 <DialogTitle>Image Preview</DialogTitle>
                 <DialogDescription>{image.prompt}</DialogDescription>
               </DialogHeader>
-              <div className="relative aspect-square w-full rounded-lg overflow-hidden">
+              <div className="relative aspect-square w-full overflow-hidden rounded-lg">
                 <Image
-                  src={image.url}
                   alt={image.prompt}
-                  fill
                   className="object-contain"
+                  fill
+                  src={image.url}
                 />
               </div>
             </DialogContent>

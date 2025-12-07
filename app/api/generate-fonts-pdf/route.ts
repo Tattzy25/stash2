@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
 import { jsPDF } from "jspdf";
+import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
     const { fonts, originalText } = await req.json();
 
-    if (!fonts || !Array.isArray(fonts) || fonts.length === 0) {
+    if (!(fonts && Array.isArray(fonts)) || fonts.length === 0) {
       return NextResponse.json(
         { error: "Fonts array is required" },
         { status: 400 }
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
     });
 
     const pdfBuffer = doc.output("arraybuffer");
-    
+
     return new NextResponse(pdfBuffer, {
       headers: {
         "Content-Type": "application/pdf",

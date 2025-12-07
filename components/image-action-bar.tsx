@@ -1,10 +1,5 @@
-'use client';
+"use client";
 
-import { PlusIcon } from '@/components/ui/plus';
-import { HeartIcon } from '@/components/ui/heart';
-import { MailCheckIcon } from '@/components/ui/mail-check';
-import { DownloadIcon } from '@/components/ui/download';
-import { DeleteIcon } from '@/components/ui/delete';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,8 +10,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { cn } from '@/lib/utils';
+} from "@/components/ui/alert-dialog";
+import { DeleteIcon } from "@/components/ui/delete";
+import { DownloadIcon } from "@/components/ui/download";
+import { HeartIcon } from "@/components/ui/heart";
+import { MailCheckIcon } from "@/components/ui/mail-check";
+import { PlusIcon } from "@/components/ui/plus";
+import { cn } from "@/lib/utils";
 
 export interface ImageActionBarProps {
   onAddToGallery?: () => void;
@@ -32,7 +32,7 @@ export interface ImageActionBarProps {
   isLiked?: boolean;
   iconSize?: number;
   className?: string;
-  variant?: 'default' | 'overlay' | 'minimal';
+  variant?: "default" | "overlay" | "minimal";
 }
 
 export function ImageActionBar({
@@ -49,9 +49,8 @@ export function ImageActionBar({
   isLiked = false,
   iconSize = 24,
   className,
-  variant = 'default',
+  variant = "default",
 }: ImageActionBarProps) {
-  
   const handleShare = async () => {
     if (onShare) {
       onShare();
@@ -59,65 +58,61 @@ export function ImageActionBar({
       // Native share fallback
       try {
         await navigator.share({
-          title: 'Check out this tattoo design',
-          text: 'Created with TaTTTy AI',
+          title: "Check out this tattoo design",
+          text: "Created with TaTTTy AI",
           url: window.location.href,
         });
       } catch (err) {
-        console.log('Share cancelled or failed');
+        console.log("Share cancelled or failed");
       }
     }
   };
 
   const baseStyles = {
-    default: 'flex items-center gap-4 bg-black/60 backdrop-blur-md rounded-full px-6 py-3',
-    overlay: 'flex items-center gap-4 bg-black/60 backdrop-blur-md rounded-full px-6 py-3',
-    minimal: 'flex items-center gap-3',
+    default:
+      "flex items-center gap-4 bg-black/60 backdrop-blur-md rounded-full px-6 py-3",
+    overlay:
+      "flex items-center gap-4 bg-black/60 backdrop-blur-md rounded-full px-6 py-3",
+    minimal: "flex items-center gap-3",
   };
 
   const buttonStyles = {
-    default: 'text-white/80 hover:text-white hover:scale-110 transition-all cursor-pointer',
-    overlay: 'text-white/80 hover:text-white hover:scale-110 transition-all cursor-pointer',
-    minimal: 'text-muted-foreground hover:text-foreground hover:scale-110 transition-all cursor-pointer',
+    default:
+      "text-white/80 hover:text-white hover:scale-110 transition-all cursor-pointer",
+    overlay:
+      "text-white/80 hover:text-white hover:scale-110 transition-all cursor-pointer",
+    minimal:
+      "text-muted-foreground hover:text-foreground hover:scale-110 transition-all cursor-pointer",
   };
 
   return (
     <div className={cn(baseStyles[variant], className)}>
       {showAdd && (
-        <button
-          onClick={onAddToGallery}
-          className={buttonStyles[variant]}
-        >
+        <button className={buttonStyles[variant]} onClick={onAddToGallery}>
           <PlusIcon size={iconSize} />
         </button>
       )}
 
       {showHeart && (
         <button
-          onClick={onAddToLiked}
           className={cn(
             buttonStyles[variant],
-            isLiked && 'text-red-500 hover:text-red-400'
+            isLiked && "text-red-500 hover:text-red-400"
           )}
+          onClick={onAddToLiked}
         >
           <HeartIcon size={iconSize} />
         </button>
       )}
 
       {showShare && (
-        <button
-          onClick={handleShare}
-          className={buttonStyles[variant]}
-        >
+        <button className={buttonStyles[variant]} onClick={handleShare}>
           <MailCheckIcon size={iconSize} />
         </button>
       )}
 
       {showDownload && (
-        <button
-          onClick={onDownload}
-          className={buttonStyles[variant]}
-        >
+        <button className={buttonStyles[variant]} onClick={onDownload}>
           <DownloadIcon size={iconSize} />
         </button>
       )}
@@ -125,9 +120,7 @@ export function ImageActionBar({
       {showDelete && (
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <button
-              className={cn(buttonStyles[variant], 'hover:text-red-500')}
-            >
+            <button className={cn(buttonStyles[variant], "hover:text-red-500")}>
               <DeleteIcon size={iconSize} />
             </button>
           </AlertDialogTrigger>
@@ -135,14 +128,15 @@ export function ImageActionBar({
             <AlertDialogHeader>
               <AlertDialogTitle>Are you sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This will permanently delete this image from your library. This action cannot be undone.
+                This will permanently delete this image from your library. This
+                action cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
-                onClick={onDelete}
                 className="bg-red-500 hover:bg-red-600"
+                onClick={onDelete}
               >
                 Delete
               </AlertDialogAction>

@@ -47,7 +47,9 @@ export function getLikedImages(): StoredImage[] {
 /**
  * Save a newly generated image
  */
-export function saveGeneratedImage(image: Omit<StoredImage, "id" | "createdAt" | "liked">): StoredImage {
+export function saveGeneratedImage(
+  image: Omit<StoredImage, "id" | "createdAt" | "liked">
+): StoredImage {
   const newImage: StoredImage = {
     ...image,
     id: `gen_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -57,11 +59,11 @@ export function saveGeneratedImage(image: Omit<StoredImage, "id" | "createdAt" |
 
   const existing = getGeneratedImages();
   const updated = [newImage, ...existing].slice(0, 100); // Keep max 100 images
-  
+
   if (typeof window !== "undefined") {
     localStorage.setItem(GENERATED_IMAGES_KEY, JSON.stringify(updated));
   }
-  
+
   return newImage;
 }
 
@@ -80,11 +82,11 @@ export function saveGeneratedImages(
 
   const existing = getGeneratedImages();
   const updated = [...newImages, ...existing].slice(0, 100);
-  
+
   if (typeof window !== "undefined") {
     localStorage.setItem(GENERATED_IMAGES_KEY, JSON.stringify(updated));
   }
-  
+
   return newImages;
 }
 
@@ -94,32 +96,35 @@ export function saveGeneratedImages(
 export function toggleLikeImage(imageId: string): boolean {
   const generated = getGeneratedImages();
   const liked = getLikedImages();
-  
+
   // Find the image in generated images
-  const imageIndex = generated.findIndex(img => img.id === imageId);
-  
+  const imageIndex = generated.findIndex((img) => img.id === imageId);
+
   if (imageIndex === -1) return false;
-  
+
   const image = generated[imageIndex];
   const wasLiked = image.liked;
-  
+
   // Toggle the liked status
   generated[imageIndex] = { ...image, liked: !wasLiked };
-  
+
   if (typeof window !== "undefined") {
     localStorage.setItem(GENERATED_IMAGES_KEY, JSON.stringify(generated));
-    
-    if (!wasLiked) {
-      // Add to liked images
-      const updatedLiked = [generated[imageIndex], ...liked.filter(l => l.id !== imageId)];
+
+    if (wasLiked) {
+      // Remove from liked images
+      const updatedLiked = liked.filter((l) => l.id !== imageId);
       localStorage.setItem(LIKED_IMAGES_KEY, JSON.stringify(updatedLiked));
     } else {
-      // Remove from liked images
-      const updatedLiked = liked.filter(l => l.id !== imageId);
+      // Add to liked images
+      const updatedLiked = [
+        generated[imageIndex],
+        ...liked.filter((l) => l.id !== imageId),
+      ];
       localStorage.setItem(LIKED_IMAGES_KEY, JSON.stringify(updatedLiked));
     }
   }
-  
+
   return !wasLiked;
 }
 
@@ -129,17 +134,17 @@ export function toggleLikeImage(imageId: string): boolean {
 export function deleteGeneratedImage(imageId: string): boolean {
   const generated = getGeneratedImages();
   const liked = getLikedImages();
-  
-  const filtered = generated.filter(img => img.id !== imageId);
-  const filteredLiked = liked.filter(img => img.id !== imageId);
-  
+
+  const filtered = generated.filter((img) => img.id !== imageId);
+  const filteredLiked = liked.filter((img) => img.id !== imageId);
+
   if (filtered.length === generated.length) return false;
-  
+
   if (typeof window !== "undefined") {
     localStorage.setItem(GENERATED_IMAGES_KEY, JSON.stringify(filtered));
     localStorage.setItem(LIKED_IMAGES_KEY, JSON.stringify(filteredLiked));
   }
-  
+
   return true;
 }
 

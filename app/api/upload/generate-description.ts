@@ -23,7 +23,8 @@ export const generateDescription = async (blob: PutBlobResult) => {
 
     const { text } = await generateText({
       model: "xai/grok-2-vision",
-      system: "Describe the image in detail. create a second detailed descrition of the image but short max two sentences, and create a unique max three words image title, Keep it raw keep it real Keep it unapologetic You describe what you see. Do not make up anything that is not in the image. Be direct and to the point.",
+      system:
+        "Describe the image in detail. create a second detailed descrition of the image but short max two sentences, and create a unique max three words image title, Keep it raw keep it real Keep it unapologetic You describe what you see. Do not make up anything that is not in the image. Be direct and to the point.",
       messages: [
         {
           role: "user",

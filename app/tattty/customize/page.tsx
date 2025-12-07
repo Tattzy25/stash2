@@ -1,13 +1,19 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { Loader2, Upload, X, Image as ImageIcon } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Image as ImageIcon, Loader2, Upload, X } from "lucide-react";
 import Image from "next/image";
+import { useCallback, useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
 
 interface ImageUpload {
   id: number;
@@ -24,38 +30,41 @@ export default function CustomizePage() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const handleFileChange = useCallback((index: number, file: File | null) => {
-    if (file && !file.type.startsWith("image/")) {
-      toast({
-        title: "Invalid File",
-        description: "Please upload an image file.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setUploads((prev) => {
-      const newUploads = [...prev];
-      if (file) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setUploads((current) => {
-            const updated = [...current];
-            updated[index] = {
-              id: index,
-              file,
-              preview: reader.result as string,
-            };
-            return updated;
-          });
-        };
-        reader.readAsDataURL(file);
-      } else {
-        newUploads[index] = { id: index, file: null, preview: null };
+  const handleFileChange = useCallback(
+    (index: number, file: File | null) => {
+      if (file && !file.type.startsWith("image/")) {
+        toast({
+          title: "Invalid File",
+          description: "Please upload an image file.",
+          variant: "destructive",
+        });
+        return;
       }
-      return newUploads;
-    });
-  }, [toast]);
+
+      setUploads((prev) => {
+        const newUploads = [...prev];
+        if (file) {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            setUploads((current) => {
+              const updated = [...current];
+              updated[index] = {
+                id: index,
+                file,
+                preview: reader.result as string,
+              };
+              return updated;
+            });
+          };
+          reader.readAsDataURL(file);
+        } else {
+          newUploads[index] = { id: index, file: null, preview: null };
+        }
+        return newUploads;
+      });
+    },
+    [toast]
+  );
 
   const handleDrop = useCallback(
     (index: number, e: React.DragEvent<HTMLDivElement>) => {
@@ -104,7 +113,7 @@ export default function CustomizePage() {
     try {
       const formData = new FormData();
       formData.append("prompt", prompt);
-      
+
       uploadedFiles.forEach((upload, idx) => {
         if (upload.file) {
           formData.append(`image_${idx}`, upload.file);
@@ -121,7 +130,10 @@ export default function CustomizePage() {
       }
 
       const data = await response.json();
-      setGeneratedImage(data.image);
+      const imageData = data.image.startsWith("data:") 
+        ? data.image 
+        : `data:image/png;base64,${data.image}`;
+      setGeneratedImage(imageData);
 
       toast({
         title: "Success",
@@ -141,20 +153,21 @@ export default function CustomizePage() {
   return (
     <div className="flex h-[calc(100svh-var(--header-height))] flex-1 flex-col overflow-hidden md:h-[calc(100svh-var(--header-height)-1rem)]">
       <div className="h-full overflow-y-auto">
-        <div className="py-4 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
+        <div className="px-4 py-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl">
             {/* Header */}
-            <h1 className="pt-4 sm:pt-[30px] mb-8 sm:mb-12 text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-center font-[family-name:var(--font-rock-salt)]">
+            <h1 className="mb-8 pt-4 text-center font-[family-name:var(--font-rock-salt)] font-bold text-3xl sm:mb-12 sm:pt-[30px] sm:text-5xl md:text-6xl lg:text-7xl">
               CUSTOMIZE
             </h1>
 
             {/* Prompt Input */}
-            <div className="max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto mb-8">
+            <div className="mx-auto mb-8 max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl">
               <Card>
                 <CardHeader>
                   <CardTitle>Create Your Custom Design</CardTitle>
                   <CardDescription>
-                    Upload up to 8 images and describe how you want them combined
+                    Upload up to 8 images and describe how you want them
+                    combined
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -162,10 +175,10 @@ export default function CustomizePage() {
                     <Label htmlFor="prompt">Prompt</Label>
                     <Textarea
                       id="prompt"
-                      placeholder="Describe how you want to combine these images..."
-                      value={prompt}
                       onChange={(e) => setPrompt(e.target.value)}
+                      placeholder="Describe how you want to combine these images..."
                       rows={3}
+                      value={prompt}
                     />
                   </div>
                 </CardContent>
@@ -173,50 +186,50 @@ export default function CustomizePage() {
             </div>
 
             {/* Upload Grid */}
-            <div className="max-w-full mx-auto mb-8">
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <div className="mx-auto mb-8 max-w-full">
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
                 {uploads.map((upload, index) => (
                   <Card
+                    className="relative aspect-square cursor-pointer transition-colors hover:border-primary"
                     key={upload.id}
-                    className="relative aspect-square cursor-pointer hover:border-primary transition-colors"
-                    onDrop={(e) => handleDrop(index, e)}
                     onDragOver={handleDragOver}
+                    onDrop={(e) => handleDrop(index, e)}
                   >
-                    <CardContent className="p-0 h-full">
+                    <CardContent className="h-full p-0">
                       {upload.preview ? (
                         <div className="relative h-full w-full">
                           <Image
-                            src={upload.preview}
                             alt={`Upload ${index + 1}`}
+                            className="rounded-lg object-cover"
                             fill
-                            className="object-cover rounded-lg"
+                            src={upload.preview}
                           />
                           <Button
-                            size="icon"
-                            variant="destructive"
                             className="absolute top-2 right-2 h-6 w-6"
                             onClick={() => removeUpload(index)}
+                            size="icon"
+                            variant="destructive"
                           >
                             <X className="h-3 w-3" />
                           </Button>
                         </div>
                       ) : (
                         <label
+                          className="flex h-full cursor-pointer flex-col items-center justify-center"
                           htmlFor={`file-${index}`}
-                          className="flex flex-col items-center justify-center h-full cursor-pointer"
                         >
                           <input
-                            id={`file-${index}`}
-                            type="file"
                             accept="image/*"
                             className="hidden"
+                            id={`file-${index}`}
                             onChange={(e) => {
                               const file = e.target.files?.[0] || null;
                               handleFileChange(index, file);
                             }}
+                            type="file"
                           />
-                          <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-                          <span className="text-xs text-muted-foreground text-center px-2">
+                          <Upload className="mb-2 h-8 w-8 text-muted-foreground" />
+                          <span className="px-2 text-center text-muted-foreground text-xs">
                             Drop or click
                           </span>
                         </label>
@@ -228,11 +241,11 @@ export default function CustomizePage() {
             </div>
 
             {/* Generate Button */}
-            <div className="max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto mb-8">
+            <div className="mx-auto mb-8 max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl">
               <Button
-                onClick={handleGenerate}
-                disabled={isLoading}
                 className="w-full"
+                disabled={isLoading}
+                onClick={handleGenerate}
                 size="lg"
               >
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -242,7 +255,7 @@ export default function CustomizePage() {
 
             {/* Generated Image Display */}
             {generatedImage && (
-              <div className="max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto">
+              <div className="mx-auto max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl">
                 <Card>
                   <CardHeader>
                     <CardTitle>Generated Design</CardTitle>
@@ -250,10 +263,10 @@ export default function CustomizePage() {
                   <CardContent>
                     <div className="relative aspect-square w-full">
                       <Image
-                        src={generatedImage}
                         alt="Generated design"
+                        className="rounded-lg object-contain"
                         fill
-                        className="object-contain rounded-lg"
+                        src={generatedImage}
                       />
                     </div>
                   </CardContent>
@@ -262,10 +275,12 @@ export default function CustomizePage() {
             )}
 
             {/* Empty State */}
-            {!isLoading && !generatedImage && (
-              <div className="max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto text-center text-muted-foreground py-12">
-                <ImageIcon className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                <p>Upload images and enter a prompt to create your custom design.</p>
+            {!(isLoading || generatedImage) && (
+              <div className="mx-auto max-w-full py-12 text-center text-muted-foreground sm:max-w-xl md:max-w-2xl lg:max-w-3xl">
+                <ImageIcon className="mx-auto mb-4 h-16 w-16 opacity-50" />
+                <p>
+                  Upload images and enter a prompt to create your custom design.
+                </p>
               </div>
             )}
           </div>

@@ -6,10 +6,10 @@ import {
   IconHelp,
   IconInnerShadowTop,
   IconListDetails,
+  IconPalette,
   IconSearch,
   IconSettings,
   IconTypography,
-  IconPalette,
 } from "@tabler/icons-react";
 import type * as React from "react";
 

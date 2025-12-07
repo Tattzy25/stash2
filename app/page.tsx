@@ -3,7 +3,8 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "TaTTTy - Tattoo Image Generator",
-  description: "AI-powered tattoo image generation and management platform with semantic search capabilities",
+  description:
+    "AI-powered tattoo image generation and management platform with semantic search capabilities",
 };
 
 const Home = () => (

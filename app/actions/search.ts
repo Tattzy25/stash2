@@ -42,19 +42,18 @@ export const search = async (
   }
 
   try {
-    console.log(
-      "Searching index for query:",
-      query
-    );
+    console.log("Searching index for query:", query);
 
     // Build filter string from tattoo metadata
     const filters: string[] = [];
 
     if (styleFilter) filters.push(`tattooMetadata.style = '${styleFilter}'`);
-    if (placementFilter) filters.push(`tattooMetadata.placement = '${placementFilter}'`);
+    if (placementFilter)
+      filters.push(`tattooMetadata.placement = '${placementFilter}'`);
     if (minPrice) filters.push(`tattooMetadata.price >= ${minPrice}`);
     if (maxPrice) filters.push(`tattooMetadata.price <= ${maxPrice}`);
-    if (colorsFilter) filters.push(`tattooMetadata.colors CONTAINS '${colorsFilter}'`);
+    if (colorsFilter)
+      filters.push(`tattooMetadata.colors CONTAINS '${colorsFilter}'`);
 
     const filterString = filters.length > 0 ? filters.join(" AND ") : undefined;
 

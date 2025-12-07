@@ -40,9 +40,7 @@ export const MODEL_CONFIGS: Record<ModelMode, Record<ProviderKey, string>> = {
   },
 };
 
-export const PROVIDER_ORDER: ProviderKey[] = [
-  "replicate",
-];
+export const PROVIDER_ORDER: ProviderKey[] = ["replicate"];
 
 export const initializeProviderRecord = <T>(defaultValue?: T) =>
   Object.fromEntries(

@@ -1,12 +1,18 @@
 "use client";
 
+import { Copy, Download, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { Copy, Download, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function FontsPage() {
@@ -40,7 +46,7 @@ export default function FontsPage() {
 
       const data = await response.json();
       setGeneratedFonts(data.fonts || []);
-      
+
       toast({
         title: "Success",
         description: "Font variations generated successfully!",
@@ -111,20 +117,21 @@ export default function FontsPage() {
   return (
     <div className="flex h-[calc(100svh-var(--header-height))] flex-1 flex-col overflow-hidden md:h-[calc(100svh-var(--header-height)-1rem)]">
       <div className="h-full overflow-y-auto">
-        <div className="py-4 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
+        <div className="px-4 py-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl">
             {/* Header */}
-            <h1 className="pt-4 sm:pt-[30px] mb-8 sm:mb-12 text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-center font-[family-name:var(--font-rock-salt)]">
+            <h1 className="mb-8 pt-4 text-center font-[family-name:var(--font-rock-salt)] font-bold text-3xl sm:mb-12 sm:pt-[30px] sm:text-5xl md:text-6xl lg:text-7xl">
               FONT FORGE
             </h1>
 
             {/* Input Section */}
-            <div className="max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto mb-8">
+            <div className="mx-auto mb-8 max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl">
               <Card>
                 <CardHeader>
                   <CardTitle>Generate Font Variations</CardTitle>
                   <CardDescription>
-                    Enter your text and optional style preferences to generate creative font variations
+                    Enter your text and optional style preferences to generate
+                    creative font variations
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -132,35 +139,34 @@ export default function FontsPage() {
                     <Label htmlFor="text">Text</Label>
                     <Textarea
                       id="text"
-                      placeholder="Enter the text you want to stylize..."
-                      value={text}
                       onChange={(e) => setText(e.target.value)}
+                      placeholder="Enter the text you want to stylize..."
                       rows={3}
+                      value={text}
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="style">Style (optional)</Label>
                     <Input
                       id="style"
+                      onChange={(e) => setStyle(e.target.value)}
                       placeholder="e.g., bold, elegant, gothic, modern..."
                       value={style}
-                      onChange={(e) => setStyle(e.target.value)}
                     />
                   </div>
                   <div className="flex gap-2">
                     <Button
-                      onClick={handleGenerate}
-                      disabled={isLoading}
                       className="flex-1"
+                      disabled={isLoading}
+                      onClick={handleGenerate}
                     >
-                      {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                      {isLoading && (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      )}
                       Generate Fonts
                     </Button>
                     {generatedFonts.length > 0 && (
-                      <Button
-                        onClick={handleDownloadPDF}
-                        variant="outline"
-                      >
+                      <Button onClick={handleDownloadPDF} variant="outline">
                         <Download className="mr-2 h-4 w-4" />
                         Download PDF
                       </Button>
@@ -172,17 +178,19 @@ export default function FontsPage() {
 
             {/* Results Section */}
             {generatedFonts.length > 0 && (
-              <div className="max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto space-y-4">
-                <h2 className="text-2xl font-bold text-center mb-6">Generated Variations</h2>
+              <div className="mx-auto max-w-full space-y-4 sm:max-w-xl md:max-w-2xl lg:max-w-3xl">
+                <h2 className="mb-6 text-center font-bold text-2xl">
+                  Generated Variations
+                </h2>
                 {generatedFonts.map((font, index) => (
                   <Card key={index}>
                     <CardContent className="p-6">
-                      <div className="flex justify-between items-start gap-4">
-                        <p className="text-lg flex-1 break-words">{font}</p>
+                      <div className="flex items-start justify-between gap-4">
+                        <p className="flex-1 break-words text-lg">{font}</p>
                         <Button
+                          onClick={() => handleCopy(font)}
                           size="icon"
                           variant="ghost"
-                          onClick={() => handleCopy(font)}
                         >
                           <Copy className="h-4 w-4" />
                         </Button>
@@ -195,8 +203,11 @@ export default function FontsPage() {
 
             {/* Empty State */}
             {!isLoading && generatedFonts.length === 0 && (
-              <div className="max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto text-center text-muted-foreground py-12">
-                <p>Enter text above and click "Generate Fonts" to see creative font variations.</p>
+              <div className="mx-auto max-w-full py-12 text-center text-muted-foreground sm:max-w-xl md:max-w-2xl lg:max-w-3xl">
+                <p>
+                  Enter text above and click "Generate Fonts" to see creative
+                  font variations.
+                </p>
               </div>
             )}
           </div>

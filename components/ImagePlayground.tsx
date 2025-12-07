@@ -1,19 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import { ModelCardCarousel } from "@/components/ModelCardCarousel";
 import { ModelSelect } from "@/components/ModelSelect";
 import { PromptInput } from "@/components/PromptInput";
-import { ModelCardCarousel } from "@/components/ModelCardCarousel";
-import {
-  MODEL_CONFIGS,
-  PROVIDERS,
-  PROVIDER_ORDER,
-  ProviderKey,
-  ModelMode,
-  initializeProviderRecord,
-} from "@/lib/provider-config";
-import { Suggestion } from "@/lib/suggestions";
 import { useImageGeneration } from "@/hooks/use-image-generation";
+import {
+  initializeProviderRecord,
+  MODEL_CONFIGS,
+  type ModelMode,
+  PROVIDER_ORDER,
+  PROVIDERS,
+  type ProviderKey,
+} from "@/lib/provider-config";
+import type { Suggestion } from "@/lib/suggestions";
 import { Header } from "./Header";
 
 export function ImagePlayground({
@@ -35,7 +35,7 @@ export function ImagePlayground({
     Record<ProviderKey, string>
   >(MODEL_CONFIGS.performance);
   const [enabledProviders, setEnabledProviders] = useState(
-    initializeProviderRecord(true),
+    initializeProviderRecord(true)
   );
   const [mode, setMode] = useState<ModelMode>("performance");
   const toggleView = () => {
@@ -73,16 +73,16 @@ export function ImagePlayground({
   };
 
   return (
-    <div className="min-h-screen bg-background py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-background px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
         <Header />
         <PromptInput
-          onSubmit={handlePromptSubmit}
           isLoading={isLoading}
-          showProviders={showProviders}
-          onToggleProviders={toggleView}
           mode={mode}
           onModeChange={handleModeChange}
+          onSubmit={handlePromptSubmit}
+          onToggleProviders={toggleView}
+          showProviders={showProviders}
           suggestions={suggestions}
         />
         <>
@@ -119,13 +119,13 @@ export function ImagePlayground({
                 <div className="md:hidden">
                   <ModelCardCarousel models={getModelProps()} />
                 </div>
-                <div className="hidden md:grid md:grid-cols-2 2xl:grid-cols-4 gap-8">
+                <div className="hidden gap-8 md:grid md:grid-cols-2 2xl:grid-cols-4">
                   {getModelProps().map((props) => (
                     <ModelSelect key={props.label} {...props} />
                   ))}
                 </div>
                 {activePrompt && activePrompt.length > 0 && (
-                  <div className="text-center mt-4 text-muted-foreground">
+                  <div className="mt-4 text-center text-muted-foreground">
                     {activePrompt}
                   </div>
                 )}

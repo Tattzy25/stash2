@@ -1,5 +1,5 @@
 // Utility functions for my-tatttz page
-import type { StoredImage, AccordionItemData } from "./types";
+import type { AccordionItemData, StoredImage } from "./types";
 
 /**
  * Format a date string for display

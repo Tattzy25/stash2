@@ -3,16 +3,16 @@
 import { useEffect, useState } from "react";
 import {
   Carousel,
-  CarouselApi,
+  type CarouselApi,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { ImageDisplay } from "./ImageDisplay";
+import type { GeneratedImage, ProviderTiming } from "@/lib/image-types";
+import type { ProviderKey } from "@/lib/provider-config";
 import { cn } from "@/lib/utils";
-import { ProviderKey } from "@/lib/provider-config";
-import { GeneratedImage, ProviderTiming } from "@/lib/image-types";
+import { ImageDisplay } from "./ImageDisplay";
 
 interface ImageCarouselProps {
   providers: ProviderKey[];
@@ -44,28 +44,28 @@ export function ImageCarousel({
 
   return (
     <div className="relative w-full">
-      <Carousel setApi={setApi} opts={{ align: "start", loop: true }}>
+      <Carousel opts={{ align: "start", loop: true }} setApi={setApi}>
         <CarouselContent>
           {providers.map((provider, i) => {
             const imageData = images?.find(
-              (img) => img.provider === provider,
+              (img) => img.provider === provider
             )?.image;
             const timing = timings[provider];
 
             return (
               <CarouselItem key={provider}>
                 <ImageDisplay
+                  enabled={enabledProviders[provider]}
+                  failed={failedProviders.includes(provider)}
+                  image={imageData}
                   modelId={
                     images?.find((img) => img.provider === provider)?.modelId ||
                     providerToModel[provider]
                   }
                   provider={provider}
-                  image={imageData}
                   timing={timing}
-                  failed={failedProviders.includes(provider)}
-                  enabled={enabledProviders[provider]}
                 />
-                <div className="text-center text-sm text-muted-foreground mt-4">
+                <div className="mt-4 text-center text-muted-foreground text-sm">
                   {i + 1} of {providers.length}
                 </div>
               </CarouselItem>
@@ -78,17 +78,17 @@ export function ImageCarousel({
       </Carousel>
 
       {/* Dot Indicators */}
-      <div className="absolute -bottom-6 left-0 right-0">
+      <div className="-bottom-6 absolute right-0 left-0">
         <div className="flex justify-center gap-1">
           {providers.map((_, index) => (
             <button
-              key={index}
               className={cn(
                 "h-1.5 rounded-full transition-all",
                 index === currentSlide
                   ? "w-4 bg-primary"
-                  : "w-1.5 bg-primary/50",
+                  : "w-1.5 bg-primary/50"
               )}
+              key={index}
               onClick={() => api?.scrollTo(index)}
             >
               <span className="sr-only">Go to image {index + 1}</span>

@@ -47,7 +47,6 @@ export const imageHelpers = {
     }
   },
 
-  formatModelId: (modelId: string): string => {
-    return modelId.split("/").pop() || modelId;
-  },
+  formatModelId: (modelId: string): string =>
+    modelId.split("/").pop() || modelId,
 };

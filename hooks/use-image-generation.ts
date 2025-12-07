@@ -1,6 +1,13 @@
 import { useState } from "react";
-import { ImageError, ImageResult, ProviderTiming } from "@/lib/image-types";
-import { initializeProviderRecord, ProviderKey } from "@/lib/provider-config";
+import type {
+  ImageError,
+  ImageResult,
+  ProviderTiming,
+} from "@/lib/image-types";
+import {
+  initializeProviderRecord,
+  type ProviderKey,
+} from "@/lib/provider-config";
 
 interface UseImageGenerationReturn {
   images: ImageResult[];
@@ -11,7 +18,7 @@ interface UseImageGenerationReturn {
   startGeneration: (
     prompt: string,
     providers: ProviderKey[],
-    providerToModel: Record<ProviderKey, string>,
+    providerToModel: Record<ProviderKey, string>
   ) => Promise<void>;
   resetState: () => void;
   activePrompt: string;
@@ -21,7 +28,7 @@ export function useImageGeneration(): UseImageGenerationReturn {
   const [images, setImages] = useState<ImageResult[]>([]);
   const [errors, setErrors] = useState<ImageError[]>([]);
   const [timings, setTimings] = useState<Record<ProviderKey, ProviderTiming>>(
-    initializeProviderRecord<ProviderTiming>(),
+    initializeProviderRecord<ProviderTiming>()
   );
   const [failedProviders, setFailedProviders] = useState<ProviderKey[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -38,7 +45,7 @@ export function useImageGeneration(): UseImageGenerationReturn {
   const startGeneration = async (
     prompt: string,
     providers: ProviderKey[],
-    providerToModel: Record<ProviderKey, string>,
+    providerToModel: Record<ProviderKey, string>
   ) => {
     setActivePrompt(prompt);
     try {
@@ -49,7 +56,7 @@ export function useImageGeneration(): UseImageGenerationReturn {
           provider,
           image: null,
           modelId: providerToModel[provider],
-        })),
+        }))
       );
 
       // Clear previous state
@@ -60,15 +67,15 @@ export function useImageGeneration(): UseImageGenerationReturn {
       const now = Date.now();
       setTimings(
         Object.fromEntries(
-          providers.map((provider) => [provider, { startTime: now }]),
-        ) as Record<ProviderKey, ProviderTiming>,
+          providers.map((provider) => [provider, { startTime: now }])
+        ) as Record<ProviderKey, ProviderTiming>
       );
 
       // Helper to fetch a single provider
       const generateImage = async (provider: ProviderKey, modelId: string) => {
         const startTime = now;
         console.log(
-          `Generate image request [provider=${provider}, modelId=${modelId}]`,
+          `Generate image request [provider=${provider}, modelId=${modelId}]`
         );
         try {
           const request = {
@@ -99,7 +106,7 @@ export function useImageGeneration(): UseImageGenerationReturn {
           }));
 
           console.log(
-            `Successful image response [provider=${provider}, modelId=${modelId}, elapsed=${elapsed}ms]`,
+            `Successful image response [provider=${provider}, modelId=${modelId}, elapsed=${elapsed}ms]`
           );
 
           // Update image in state
@@ -107,13 +114,13 @@ export function useImageGeneration(): UseImageGenerationReturn {
             prevImages.map((item) =>
               item.provider === provider
                 ? { ...item, image: data.image ?? null, modelId }
-                : item,
-            ),
+                : item
+            )
           );
         } catch (err) {
           console.error(
             `Error [provider=${provider}, modelId=${modelId}]:`,
-            err,
+            err
           );
           setFailedProviders((prev) => [...prev, provider]);
           setErrors((prev) => [
@@ -131,8 +138,8 @@ export function useImageGeneration(): UseImageGenerationReturn {
             prevImages.map((item) =>
               item.provider === provider
                 ? { ...item, image: null, modelId }
-                : item,
-            ),
+                : item
+            )
           );
         }
       };
@@ -144,10 +151,12 @@ export function useImageGeneration(): UseImageGenerationReturn {
       });
 
       await Promise.all(fetchPromises);
-      
+
       // Upload successful images to Vercel Blob via the workflow
       setImages((currentImages) => {
-        const successfulImages = currentImages.filter(img => img.image !== null && img.modelId);
+        const successfulImages = currentImages.filter(
+          (img) => img.image !== null && img.modelId
+        );
         if (successfulImages.length > 0) {
           // Upload each image to the workflow in the background
           successfulImages.forEach(async (img) => {
@@ -160,29 +169,36 @@ export function useImageGeneration(): UseImageGenerationReturn {
                 byteNumbers[i] = byteCharacters.charCodeAt(i);
               }
               const byteArray = new Uint8Array(byteNumbers);
-              const blob = new Blob([byteArray], { type: 'image/png' });
-              
+              const blob = new Blob([byteArray], { type: "image/png" });
+
               // Create file from blob
               const fileName = `generated_${img.provider}_${Date.now()}.png`;
-              const file = new File([blob], fileName, { type: 'image/png' });
-              
+              const file = new File([blob], fileName, { type: "image/png" });
+
               // Upload to workflow
               const formData = new FormData();
-              formData.append('file', file);
-              
-              const response = await fetch('/api/upload', {
-                method: 'POST',
+              formData.append("file", file);
+
+              const response = await fetch("/api/upload", {
+                method: "POST",
                 body: formData,
               });
-              
+
               if (response.ok) {
                 const result = await response.json();
-                console.log(`[WORKFLOW] Image uploaded successfully, runId: ${result.runId}`);
+                console.log(
+                  `[WORKFLOW] Image uploaded successfully, runId: ${result.runId}`
+                );
               } else {
-                console.error(`[WORKFLOW] Failed to upload image: ${response.statusText}`);
+                console.error(
+                  `[WORKFLOW] Failed to upload image: ${response.statusText}`
+                );
               }
             } catch (error) {
-              console.error('[WORKFLOW] Error uploading generated image:', error);
+              console.error(
+                "[WORKFLOW] Error uploading generated image:",
+                error
+              );
             }
           });
         }

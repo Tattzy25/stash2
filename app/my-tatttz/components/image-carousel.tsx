@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { ImageCard } from "./image-card";
 import type { ImageCarouselProps } from "../types";
+import { ImageCard } from "./image-card";
 
 export function ImageCarousel({ images, onToggleLike }: ImageCarouselProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -23,7 +23,7 @@ export function ImageCarousel({ images, onToggleLike }: ImageCarouselProps) {
   }, [emblaApi]);
 
   return (
-    <div className="relative group/carousel">
+    <div className="group/carousel relative">
       {/* Navigation arrows */}
       <NavButton direction="prev" onClick={scrollPrev} />
       <NavButton direction="next" onClick={scrollNext} />
@@ -32,7 +32,7 @@ export function ImageCarousel({ images, onToggleLike }: ImageCarouselProps) {
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex gap-4">
           {images.map((image) => (
-            <div key={image.id} className="flex-none w-[240px] md:w-[280px]">
+            <div className="w-[240px] flex-none md:w-[280px]" key={image.id}>
               <ImageCard image={image} onToggleLike={onToggleLike} />
             </div>
           ))}
@@ -55,10 +55,10 @@ function NavButton({ direction, onClick }: NavButtonProps) {
 
   return (
     <Button
-      variant="outline"
-      size="icon"
-      className={`absolute ${position} top-1/2 -translate-y-1/2 z-10 opacity-0 group-hover/carousel:opacity-100 transition-opacity bg-background/80 backdrop-blur-sm`}
+      className={`absolute ${position} -translate-y-1/2 top-1/2 z-10 bg-background/80 opacity-0 backdrop-blur-sm transition-opacity group-hover/carousel:opacity-100`}
       onClick={onClick}
+      size="icon"
+      variant="outline"
     >
       <Icon className="h-4 w-4" />
     </Button>

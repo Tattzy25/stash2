@@ -76,7 +76,7 @@ export const indexImage = async (blob: PutBlobResult, text: string) => {
 
       // Search optimization
       searchable: true,
-      visibility: "public" // public, private
+      visibility: "public", // public, private
     };
 
     const result = await index.upsert({
@@ -84,7 +84,7 @@ export const indexImage = async (blob: PutBlobResult, text: string) => {
       content: { text },
       metadata: {
         ...blob,
-        tattooMetadata
+        tattooMetadata,
       },
     });
 

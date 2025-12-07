@@ -1,8 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
-import { ImageModel, experimental_generateImage as generateImage } from "ai";
 import { replicate } from "@ai-sdk/replicate";
-import { ProviderKey } from "@/lib/provider-config";
-import { GenerateImageRequest } from "@/lib/api-types";
+import {
+  experimental_generateImage as generateImage,
+  type ImageModel,
+} from "ai";
+import { type NextRequest, NextResponse } from "next/server";
+import type { GenerateImageRequest } from "@/lib/api-types";
+import type { ProviderKey } from "@/lib/provider-config";
 
 /**
  * Intended to be slightly less than the maximum execution time allowed by the
@@ -27,14 +30,13 @@ const providerConfig: Record<ProviderKey, ProviderConfig> = {
 const withTimeout = <T>(
   promise: Promise<T>,
   timeoutMillis: number
-): Promise<T> => {
-  return Promise.race([
+): Promise<T> =>
+  Promise.race([
     promise,
     new Promise<T>((_, reject) =>
       setTimeout(() => reject(new Error("Request timed out")), timeoutMillis)
     ),
   ]);
-};
 
 export async function POST(req: NextRequest) {
   const requestId = Math.random().toString(36).substring(7);
@@ -42,7 +44,7 @@ export async function POST(req: NextRequest) {
     (await req.json()) as GenerateImageRequest;
 
   try {
-    if (!prompt || !provider || !modelId || !providerConfig[provider]) {
+    if (!(prompt && provider && modelId && providerConfig[provider])) {
       const error = "Invalid request parameters";
       console.error(`${error} [requestId=${requestId}]`);
       return NextResponse.json({ error }, { status: 400 });
@@ -50,12 +52,12 @@ export async function POST(req: NextRequest) {
 
     const config = providerConfig[provider];
     const startstamp = performance.now();
-    
+
     const generatePromise = generateImage({
       model: config.createImageModel(modelId),
       prompt,
       size: DEFAULT_IMAGE_SIZE,
-      seed: Math.floor(Math.random() * 1000000),
+      seed: Math.floor(Math.random() * 1_000_000),
     }).then(({ image, warnings }) => {
       if (warnings?.length > 0) {
         console.warn(
@@ -65,8 +67,7 @@ export async function POST(req: NextRequest) {
       }
       console.log(
         `Completed image request [requestId=${requestId}, provider=${provider}, model=${modelId}, elapsed=${(
-          (performance.now() - startstamp) /
-          1000
+          (performance.now() - startstamp) / 1000
         ).toFixed(1)}s].`
       );
 

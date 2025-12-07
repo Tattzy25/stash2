@@ -16,4 +16,4 @@ export const PLACEHOLDER_IMAGES = [
   "/vwev.jpg",
 ] as const;
 
-export type PlaceholderImage = typeof PLACEHOLDER_IMAGES[number];
+export type PlaceholderImage = (typeof PLACEHOLDER_IMAGES)[number];

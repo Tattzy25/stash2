@@ -1,6 +1,6 @@
 "use client";
 
-import { Zap, Sparkles } from "lucide-react";
+import { Sparkles, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
@@ -19,10 +19,9 @@ export function QualityModeToggle({
   const { toast } = useToast();
 
   return (
-    <div className="flex flex-col items-center gap-2 min-w-[240px]">
+    <div className="flex min-w-[240px] flex-col items-center gap-2">
       <div className="flex gap-2">
         <Button
-          variant="secondary"
           disabled={disabled}
           onClick={() => {
             onValueChange("performance");
@@ -31,12 +30,12 @@ export function QualityModeToggle({
               duration: 2000,
             });
           }}
+          variant="secondary"
         >
-          <Zap className="h-4 w-4 mr-2" />
+          <Zap className="mr-2 h-4 w-4" />
           Performance
         </Button>
         <Button
-          variant="secondary"
           disabled={disabled}
           onClick={() => {
             onValueChange("quality");
@@ -46,8 +45,9 @@ export function QualityModeToggle({
               duration: 2000,
             });
           }}
+          variant="secondary"
         >
-          <Sparkles className="h-4 w-4 mr-2" />
+          <Sparkles className="mr-2 h-4 w-4" />
           Quality
         </Button>
       </div>
