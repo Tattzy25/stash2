@@ -5,6 +5,10 @@ import { Textarea } from "@/components/ui/textarea";
 
 type QualityMode = "performance" | "quality";
 
+interface Suggestion {
+  text: string;
+}
+
 interface PromptInputProps {
   onSubmit: (prompt: string) => void;
   isLoading?: boolean;
@@ -12,6 +16,7 @@ interface PromptInputProps {
   onToggleProviders: () => void;
   mode: QualityMode;
   onModeChange: (mode: QualityMode) => void;
+  suggestions?: Suggestion[];
 }
 
 export function PromptInput({ isLoading, onSubmit }: PromptInputProps) {
