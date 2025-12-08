@@ -23,12 +23,22 @@ interface ImageUpload {
 
 export default function CustomizePage() {
   const [prompt, setPrompt] = useState("");
-  const [uploads, setUploads] = useState<ImageUpload[]>(
-    Array.from({ length: 8 }, (_, i) => ({ id: i, file: null, preview: null }))
-  );
+  const [uploads, setUploads] = useState<ImageUpload[]>([
+    { id: 0, file: null, preview: null },
+    { id: 1, file: null, preview: null },
+  ]);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+
+  const addUploadSlot = useCallback(() => {
+    if (uploads.length < 8) {
+      setUploads((prev) => [
+        ...prev,
+        { id: prev.length, file: null, preview: null },
+      ]);
+    }
+  }, [uploads.length]);
 
   const handleFileChange = useCallback(
     (index: number, file: File | null) => {
@@ -238,6 +248,20 @@ export default function CustomizePage() {
                   </Card>
                 ))}
               </div>
+              
+              {/* Add More Button */}
+              {uploads.length < 8 && (
+                <div className="mt-4 flex justify-center">
+                  <Button
+                    className="gap-2"
+                    onClick={addUploadSlot}
+                    variant="outline"
+                  >
+                    <Upload className="h-4 w-4" />
+                    Add Upload Slot ({uploads.length}/8)
+                  </Button>
+                </div>
+              )}
             </div>
 
             {/* Generate Button */}
