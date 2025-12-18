@@ -1,3 +1,4 @@
+import { HeartIcon } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -6,9 +7,10 @@ type PreviewProps = {
 	priority?: boolean;
 	onClick?: () => void;
 	selected?: boolean;
+	liked?: boolean;
 };
 
-export const Preview = ({ url, priority, onClick, selected }: PreviewProps) => (
+export const Preview = ({ url, priority, onClick, selected, liked }: PreviewProps) => (
 	<button
 		aria-label="Open image preview"
 		className={cn(
@@ -27,5 +29,10 @@ export const Preview = ({ url, priority, onClick, selected }: PreviewProps) => (
 			sizes="(max-width: 768px) 50vw, 25vw"
 			src={url}
 		/>
+		{liked && (
+			<div className="absolute top-2 right-2 z-10 flex size-7 items-center justify-center rounded-full bg-background/80 backdrop-blur-sm">
+				<HeartIcon className="size-4 fill-current text-icon-heart" />
+			</div>
+		)}
 	</button>
 );

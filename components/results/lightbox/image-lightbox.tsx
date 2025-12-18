@@ -25,6 +25,8 @@ type ImageLightboxProps = {
 	activeIndex: number | null;
 	onClose: () => void;
 	onSelect: (index: number) => void;
+	likedUrls: Set<string>;
+	onToggleLike: (url: string) => void;
 };
 
 export const ImageLightbox = ({
@@ -32,10 +34,11 @@ export const ImageLightbox = ({
 	activeIndex,
 	onClose,
 	onSelect,
+	likedUrls,
+	onToggleLike,
 }: ImageLightboxProps) => {
 	const open = activeIndex !== null && items.length > 0;
 	const [showInfo, setShowInfo] = useState(false); // Start collapsed on mobile
-	const [isFavorited, setIsFavorited] = useState(false);
 	const [emblaRef, emblaApi] = useEmblaCarousel({
 		align: "start",
 		skipSnaps: false,
@@ -99,14 +102,13 @@ export const ImageLightbox = ({
 		}
 	}, [currentItem]);
 
+	const isFavorited = currentItem?.url ? likedUrls.has(currentItem.url) : false;
+
 	const handleLike = useCallback(() => {
-		setIsFavorited(!isFavorited);
-		if (isFavorited) {
-			toast.info("Removed from My Tatttz");
-		} else {
-			toast.success("Added to My Tatttz!");
+		if (currentItem?.url) {
+			onToggleLike(currentItem.url);
 		}
-	}, [isFavorited]);
+	}, [currentItem?.url, onToggleLike]);
 
 	const handleShareToFriend = useCallback(async () => {
 		if (!currentItem?.url) return;
@@ -154,34 +156,42 @@ export const ImageLightbox = ({
 	const desktopDockItems = useMemo(
 		() => [
 			{
-				icon: <HeartIcon className="size-6" />,
-				label: "Like",
+				icon: (
+					<HeartIcon
+						className={`size-6 text-icon-heart ${isFavorited ? "fill-current" : ""}`}
+					/>
+				),
+				label: isFavorited ? "Unlike" : "Like",
 				onClick: handleLike,
 			},
 			{
-				icon: <SendIcon className="size-6" />,
+				icon: <SendIcon className="size-6 text-icon-share" />,
 				label: "Share",
 				onClick: () => void handleShareToFriend(),
 			},
 			{
-				icon: <CopyIcon className="size-6" />,
+				icon: <CopyIcon className="size-6 text-icon-copy" />,
 				label: "Copy Prompt",
 				onClick: () => void handleCopyPrompt(),
 			},
 		],
-		[handleLike, handleShareToFriend, handleCopyPrompt],
+		[isFavorited, handleLike, handleShareToFriend, handleCopyPrompt],
 	);
 
 	// Dock items configuration - Mobile (with info icon)
 	const mobileDockItems = useMemo(
 		() => [
 			{
-				icon: <HeartIcon className="size-6" />,
-				label: "Like",
+				icon: (
+					<HeartIcon
+						className={`size-6 text-icon-heart ${isFavorited ? "fill-current" : ""}`}
+					/>
+				),
+				label: isFavorited ? "Unlike" : "Like",
 				onClick: handleLike,
 			},
 			{
-				icon: <SendIcon className="size-6" />,
+				icon: <SendIcon className="size-6 text-icon-share" />,
 				label: "Share",
 				onClick: () => void handleShareToFriend(),
 			},
@@ -191,12 +201,12 @@ export const ImageLightbox = ({
 				onClick: handleToggleInfo,
 			},
 			{
-				icon: <CopyIcon className="size-6" />,
+				icon: <CopyIcon className="size-6 text-icon-copy" />,
 				label: "Copy Prompt",
 				onClick: () => void handleCopyPrompt(),
 			},
 		],
-		[handleLike, handleShareToFriend, handleToggleInfo, handleCopyPrompt],
+		[isFavorited, handleLike, handleShareToFriend, handleToggleInfo, handleCopyPrompt],
 	);
 
 	if (!open) {
@@ -212,17 +222,26 @@ export const ImageLightbox = ({
 				<DialogTitle className="sr-only">Image preview</DialogTitle>
 				<div className="relative flex h-full w-full flex-col overflow-hidden md:flex-row">
 					{/* Close button - only visible on desktop OR when info panel is closed on mobile */}
-					<Button
-						aria-label="Close image viewer"
-						className={`absolute top-4 right-4 z-30 ${
+					{/* Top right controls - heart indicator and close button */}
+					<div
+						className={`absolute top-4 right-4 z-30 flex items-center gap-2 ${
 							showInfo ? "hidden md:flex" : "flex"
 						}`}
-						onClick={onClose}
-						size="icon"
-						variant="ghost"
 					>
-						<XIcon className="size-5" />
-					</Button>
+						{isFavorited && (
+							<div className="flex size-9 items-center justify-center rounded-md">
+								<HeartIcon className="size-5 fill-current text-icon-heart" />
+							</div>
+						)}
+						<Button
+							aria-label="Close image viewer"
+							onClick={onClose}
+							size="icon"
+							variant="ghost"
+						>
+							<XIcon className="size-5" />
+						</Button>
+					</div>
 
 					{/* Image carousel area */}
 					<div

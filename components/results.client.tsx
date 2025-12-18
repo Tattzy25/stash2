@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState, useCallback } from "react";
 import { toast } from "sonner";
 import { search } from "@/app/actions/search";
 import { GalleryGrid } from "./results/gallery";
@@ -31,6 +31,14 @@ export const ResultsClient = ({
 		closeLightbox,
 		handleLightboxSelect,
 	} = useLightbox();
+
+	// Likes disabled until auth is ready - UI visible but non-functional
+	const [likedUrls] = useState<Set<string>>(new Set());
+
+	// No-op until auth is implemented
+	const handleToggleLike = useCallback((_url: string) => {
+		toast.info("Likes coming soon with user accounts!");
+	}, []);
 
 	useEffect(() => {
 		if ("error" in state) {
@@ -63,6 +71,7 @@ export const ResultsClient = ({
 						loadMoreRef={loadMoreRef}
 						isLoadingMore={isLoadingMore}
 						hasMore={hasMore}
+						likedUrls={likedUrls}
 					/>
 				</div>
 
@@ -80,6 +89,8 @@ export const ResultsClient = ({
 				items={galleryItems}
 				onClose={closeLightbox}
 				onSelect={handleLightboxSelect}
+				likedUrls={likedUrls}
+				onToggleLike={handleToggleLike}
 			/>
 		</div>
 	);

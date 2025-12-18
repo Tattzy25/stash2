@@ -1,30 +1,57 @@
 /** biome-ignore-all lint/suspicious/noConsole: "Handy for debugging" */
 
-import type { PutBlobResult } from "@vercel/blob";
 import { generateText, type ImagePart } from "ai";
 import { FatalError, getStepMetadata, RetryableError } from "workflow";
 
-export const generateDescription = async (blob: PutBlobResult) => {
+type SerializableFile = {
+	buffer: ArrayBuffer;
+	name: string;
+	type: string;
+	size: number;
+};
+
+export type ImageDescriptions = {
+	title: string; // 2-3 words max
+	shortDescription: string; // 1 sentence for UI
+	longDescription: string; // Full detailed description (prompt-style)
+};
+
+export const generateDescription = async (fileData: SerializableFile): Promise<ImageDescriptions> => {
 	"use step";
 
 	const { attempt, stepStartedAt, stepId } = getStepMetadata();
 
 	console.log(
 		`[${stepId}] Generating description (attempt ${attempt})...`,
-		blob.downloadUrl,
+		fileData.name,
 	);
 
 	try {
+		// Convert ArrayBuffer to base64 for Grok
+		const base64 = Buffer.from(fileData.buffer).toString("base64");
+		const dataUrl = `data:${fileData.type};base64,${base64}`;
+
 		const imagePart: ImagePart = {
 			type: "image",
-			image: blob.downloadUrl,
-			mediaType: blob.contentType,
+			image: dataUrl,
 		};
 
 		const { text } = await generateText({
 			model: "xai/grok-2-vision",
-			system:
-				"Describe the image in detail. create a second detailed descrition of the image but short max two sentences, and create a unique max three words image title, Keep it raw keep it real Keep it unapologetic You describe what you see. Do not make up anything that is not in the image. Be direct and to the point.",
+			system: `You are an image analyzer. Analyze the image and return ONLY a valid JSON object with these exact fields:
+
+{
+  "title": "2-3 word title, powerful and descriptive",
+  "shortDescription": "One sentence, punchy product description for UI display",
+  "longDescription": "Detailed prompt-style description of everything in the image. Be thorough, describe colors, subjects, composition, mood, style."
+}
+
+Rules:
+- title: MAX 3 words. Make it memorable. Examples: "Eagle Blossom Majesty", "Tattooed Rebel", "Dark Phoenix"
+- shortDescription: ONE sentence only. Think product listing. Examples: "A fierce eagle surrounded by cherry blossoms in flight.", "Woman with sleeve tattoos holding a beer against graffiti wall."
+- longDescription: Full detailed description, 2-4 sentences. Describe what you see exactly. No fluff.
+
+Return ONLY the JSON object, no markdown, no code blocks, no extra text.`,
 			messages: [
 				{
 					role: "user",
@@ -33,11 +60,17 @@ export const generateDescription = async (blob: PutBlobResult) => {
 			],
 		});
 
+		// Parse the JSON response
+		// Clean up potential markdown code blocks
+		const cleanedText = text.replace(/```json\n?|\n?```/g, "").trim();
+		const descriptions: ImageDescriptions = JSON.parse(cleanedText);
+
 		console.log(
-			`[${stepId}] Successfully generated description at ${stepStartedAt.toISOString()}`,
+			`[${stepId}] Successfully generated descriptions at ${stepStartedAt.toISOString()}`,
+			{ title: descriptions.title },
 		);
 
-		return text;
+		return descriptions;
 	} catch (error) {
 		const message = error instanceof Error ? error.message : "Unknown error";
 

@@ -1,20 +1,17 @@
 "use client";
 
 import {
-	ChevronLeft,
-	ChevronRight,
 	Clock,
 	Download,
 	Heart,
 	Share2,
-	Skull,
 	Sparkles,
 	Upload,
 	ZoomIn,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -274,7 +271,7 @@ export default function MyTaTTTzPage() {
 	}, []);
 
 	const handleToggleLike = (id: string) => {
-		const newLikedState = toggleLikeImage(id);
+		toggleLikeImage(id);
 		setImages(getGeneratedImages());
 		setLikedImages(getLikedImages());
 	};

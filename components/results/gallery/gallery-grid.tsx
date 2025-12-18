@@ -14,6 +14,7 @@ type GalleryGridProps = {
 	loadMoreRef: RefObject<HTMLDivElement | null>;
 	isLoadingMore: boolean;
 	hasMore: boolean;
+	likedUrls: Set<string>;
 };
 
 export const GalleryGrid = ({
@@ -24,6 +25,7 @@ export const GalleryGrid = ({
 	loadMoreRef,
 	isLoadingMore,
 	hasMore,
+	likedUrls,
 }: GalleryGridProps) => {
 	return (
 		<>
@@ -35,6 +37,7 @@ export const GalleryGrid = ({
 						priority={index < PRIORITY_COUNT}
 						selected={selectedIndex === index}
 						url={item.url}
+						liked={likedUrls.has(item.url)}
 					/>
 				))}
 			</div>

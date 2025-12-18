@@ -157,3 +157,56 @@ export function clearAllImages(): void {
 		localStorage.removeItem(LIKED_IMAGES_KEY);
 	}
 }
+
+/**
+ * Like/unlike an image by URL (for gallery images from Vercel Blob)
+ * Returns true if now liked, false if unliked
+ */
+export function toggleLikeImageByUrl(
+	url: string,
+	name?: string,
+	prompt?: string,
+): boolean {
+	if (typeof window === "undefined") return false;
+
+	const liked = getLikedImages();
+	const existingIndex = liked.findIndex((img) => img.url === url);
+
+	if (existingIndex !== -1) {
+		// Remove from liked
+		const updated = liked.filter((img) => img.url !== url);
+		localStorage.setItem(LIKED_IMAGES_KEY, JSON.stringify(updated));
+		return false;
+	}
+
+	// Add to liked
+	const newLikedImage: StoredImage = {
+		id: `liked_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+		url,
+		prompt: prompt || name || "Gallery image",
+		provider: "gallery",
+		modelId: "blob",
+		createdAt: new Date().toISOString(),
+		liked: true,
+	};
+
+	const updated = [newLikedImage, ...liked];
+	localStorage.setItem(LIKED_IMAGES_KEY, JSON.stringify(updated));
+	return true;
+}
+
+/**
+ * Check if an image URL is liked
+ */
+export function isImageLikedByUrl(url: string): boolean {
+	const liked = getLikedImages();
+	return liked.some((img) => img.url === url);
+}
+
+/**
+ * Get all liked image URLs as a Set
+ */
+export function getLikedImageUrls(): Set<string> {
+	const liked = getLikedImages();
+	return new Set(liked.map((img) => img.url));
+}
