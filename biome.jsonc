@@ -1,39 +1,39 @@
 {
-  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-  "extends": ["ultracite/next"],
-  "files": {
-    "includes": [
-      "**/*",
-      "!/components/ui",
-      "!/lib/utils.ts",
-      "!/hooks/use-mobile.ts"
-    ]
-  },
-  "overrides": [
-    {
-      "includes": ["components/ui/**/*"],
-      "linter": {
-        "rules": {
-          "performance": {
-            "noNamespaceImport": "off"
-          },
-          "style": {
-            "noMagicNumbers": "off"
-          },
-          "suspicious": {
-            "noArrayIndexKey": "off"
-          },
-          "correctness": {
-            "useExhaustiveDependencies": "off"
-          },
-          "nursery": {
-            "noShadow": "off"
-          },
-          "complexity": {
-            "noExcessiveCognitiveComplexity": "off"
-          }
-        }
-      }
-    }
-  ]
+	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+	"extends": ["ultracite/next"],
+	"files": {
+		"includes": [
+			"**/*",
+			"!/components/ui",
+			"!/lib/utils.ts",
+			"!/hooks/use-mobile.ts"
+		]
+	},
+	"overrides": [
+		{
+			"includes": ["components/ui/**/*"],
+			"linter": {
+				"rules": {
+					"performance": {
+						"noNamespaceImport": "off"
+					},
+					"style": {
+						"noMagicNumbers": "off"
+					},
+					"suspicious": {
+						"noArrayIndexKey": "off"
+					},
+					"correctness": {
+						"useExhaustiveDependencies": "off"
+					},
+					"nursery": {
+						"noShadow": "off"
+					},
+					"complexity": {
+						"noExcessiveCognitiveComplexity": "off"
+					}
+				}
+			}
+		}
+	]
 }

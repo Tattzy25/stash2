@@ -2,52 +2,52 @@
 
 import type { PutBlobResult } from "@vercel/blob";
 import {
-  createContext,
-  type ReactNode,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
+	createContext,
+	type ReactNode,
+	useCallback,
+	useContext,
+	useMemo,
+	useState,
 } from "react";
 
 type UploadedImagesContextValue = {
-  images: PutBlobResult[];
-  addImage: (image: PutBlobResult) => void;
+	images: PutBlobResult[];
+	addImage: (image: PutBlobResult) => void;
 };
 
 const UploadedImagesContext = createContext<
-  UploadedImagesContextValue | undefined
+	UploadedImagesContextValue | undefined
 >(undefined);
 
 export const useUploadedImages = () => {
-  const ctx = useContext(UploadedImagesContext);
-  if (!ctx) {
-    throw new Error(
-      "useUploadedImages must be used within an UploadedImagesProvider"
-    );
-  }
-  return ctx;
+	const ctx = useContext(UploadedImagesContext);
+	if (!ctx) {
+		throw new Error(
+			"useUploadedImages must be used within an UploadedImagesProvider",
+		);
+	}
+	return ctx;
 };
 
 type UploadedImagesProviderProps = {
-  children: ReactNode;
+	children: ReactNode;
 };
 
 export const UploadedImagesProvider = ({
-  children,
+	children,
 }: UploadedImagesProviderProps) => {
-  const [images, setImages] = useState<PutBlobResult[]>([]);
+	const [images, setImages] = useState<PutBlobResult[]>([]);
 
-  const addImage = useCallback(
-    (image: PutBlobResult) => setImages((prev) => [image, ...prev]),
-    []
-  );
+	const addImage = useCallback(
+		(image: PutBlobResult) => setImages((prev) => [image, ...prev]),
+		[],
+	);
 
-  const value = useMemo(() => ({ images, addImage }), [images, addImage]);
+	const value = useMemo(() => ({ images, addImage }), [images, addImage]);
 
-  return (
-    <UploadedImagesContext.Provider value={value}>
-      {children}
-    </UploadedImagesContext.Provider>
-  );
+	return (
+		<UploadedImagesContext.Provider value={value}>
+			{children}
+		</UploadedImagesContext.Provider>
+	);
 };
